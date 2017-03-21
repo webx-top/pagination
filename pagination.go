@@ -39,6 +39,7 @@ type Pagination struct {
 	tmpl      string
 	pages     int //total pages
 	urlLayout string
+	data      interface{}
 }
 
 func (p *Pagination) SetAll(tmpl string, rows int, pnl ...int) *Pagination {
@@ -56,6 +57,15 @@ func (p *Pagination) SetAll(tmpl string, rows int, pnl ...int) *Pagination {
 	p.tmpl = tmpl
 	p.pages = -1
 	return p
+}
+
+func (p *Pagination) SetData(data interface{}) *Pagination {
+	p.data = data
+	return p
+}
+
+func (p *Pagination) Data() interface{} {
+	return p.data
 }
 
 func (p *Pagination) SetPage(page int) *Pagination {
