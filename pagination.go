@@ -18,6 +18,7 @@
 package pagination
 
 import (
+	"fmt"
 	"html/template"
 	"math"
 	"strconv"
@@ -61,6 +62,18 @@ func (p *Pagination) SetAll(tmpl string, rows int, pnl ...int) *Pagination {
 
 func (p *Pagination) Set(key string, data interface{}) *Pagination {
 	p.data[key] = data
+	return p
+}
+
+func (p *Pagination) Sets(args ...interface{}) *Pagination {
+	var key string
+	for i, j := 0, len(args); i < j; i++ {
+		if i%2 == 0 {
+			key = fmt.Sprint(args[i])
+			continue
+		}
+		p.data[key] = args[i]
+	}
 	return p
 }
 
