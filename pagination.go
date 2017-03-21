@@ -27,7 +27,7 @@ import (
 )
 
 func New(ctx echo.Context) *Pagination {
-	return &Pagination{context: ctx, pages: -1}
+	return &Pagination{context: ctx, pages: -1, data: make(map[string]interface{})}
 }
 
 type Pagination struct {
@@ -39,7 +39,7 @@ type Pagination struct {
 	tmpl      string
 	pages     int //total pages
 	urlLayout string
-	data      interface{}
+	data      map[string]interface{}
 }
 
 func (p *Pagination) SetAll(tmpl string, rows int, pnl ...int) *Pagination {
@@ -59,12 +59,19 @@ func (p *Pagination) SetAll(tmpl string, rows int, pnl ...int) *Pagination {
 	return p
 }
 
-func (p *Pagination) SetData(data interface{}) *Pagination {
-	p.data = data
+func (p *Pagination) Set(key string, data interface{}) *Pagination {
+	p.data[key] = data
 	return p
 }
 
-func (p *Pagination) Data() interface{} {
+func (p *Pagination) Get(key string) interface{} {
+	if v, y := p.data[key]; y {
+		return v
+	}
+	return nil
+}
+
+func (p *Pagination) Data() map[string]interface{} {
 	return p.data
 }
 
