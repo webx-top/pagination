@@ -18,6 +18,8 @@
 package pagination
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"html/template"
 	"math"
@@ -25,10 +27,11 @@ import (
 	"strings"
 
 	"github.com/webx-top/echo"
+	"github.com/webx-top/echo/engine"
 )
 
 func New(ctx echo.Context) *Pagination {
-	return &Pagination{context: ctx, pages: -1, data: make(map[string]interface{})}
+	return &Pagination{context: ctx, pages: -1, data: echo.H{}}
 }
 
 type Pagination struct {
@@ -40,7 +43,7 @@ type Pagination struct {
 	tmpl      string
 	pages     int //total pages
 	urlLayout string
-	data      map[string]interface{}
+	data      echo.H
 }
 
 func (p *Pagination) SetAll(tmpl string, rows int, pnl ...int) *Pagination {
@@ -84,7 +87,7 @@ func (p *Pagination) Get(key string) interface{} {
 	return nil
 }
 
-func (p *Pagination) Data() map[string]interface{} {
+func (p *Pagination) Data() echo.H {
 	return p.data
 }
 
@@ -248,4 +251,51 @@ func (p *Pagination) Render(settings ...string) interface{} {
 		return e
 	}
 	return template.HTML(string(b))
+}
+
+// MarshalJSON allows type Pagination to be used with json.Marshal
+func (p *Pagination) MarshalJSON() ([]byte, error) {
+	b, e := json.Marshal(p.data)
+	var s string
+	if e != nil {
+		s = fmt.Sprintf(`%q`, e.Error())
+	} else {
+		s = engine.Bytes2str(b)
+	}
+	return engine.Str2bytes(fmt.Sprintf(`{"page":%d,"rows":%d,"limit":%d,"pages":%d,"urlLayout":%q,"data":%s}`, p.Page(), p.Rows(), p.Limit(), p.Pages(), p.urlLayout, s)), nil
+}
+
+// MarshalXML allows type Pagination to be used with xml.Marshal
+func (p *Pagination) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	start.Name.Local = `Pagination`
+	if err := e.EncodeToken(start); err != nil {
+		return err
+	}
+	if err := xmlEncode(e, `page`, p.Page()); err != nil {
+		return err
+	}
+	if err := xmlEncode(e, `rows`, p.Rows()); err != nil {
+		return err
+	}
+	if err := xmlEncode(e, `limit`, p.Limit()); err != nil {
+		return err
+	}
+	if err := xmlEncode(e, `pages`, p.Pages()); err != nil {
+		return err
+	}
+	if err := xmlEncode(e, `urlLayout`, p.urlLayout); err != nil {
+		return err
+	}
+	if err := xmlEncode(e, `data`, p.data); err != nil {
+		return err
+	}
+	return e.EncodeToken(xml.EndElement{Name: start.Name})
+}
+
+func xmlEncode(e *xml.Encoder, key string, value interface{}) error {
+	elem := xml.StartElement{
+		Name: xml.Name{Space: ``, Local: key},
+		Attr: []xml.Attr{},
+	}
+	return e.EncodeElement(value, elem)
 }
