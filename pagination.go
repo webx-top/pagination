@@ -178,6 +178,24 @@ func (p *Pagination) RebuildQueryString(delKeys ...string) string {
 	return query.Encode()
 }
 
+func (p *Pagination) RebuildURL(pageVars map[string]string, delKeys ...string) string {
+	var (
+		pq string
+		jn string
+	)
+	for name, urlVar := range pageVars {
+		delKeys = append(delKeys, urlVar)
+		pq += jn + urlVar + `={` + name + `}`
+		jn = `&`
+	}
+	q := p.RebuildQueryString(delKeys...)
+	if len(q) > 0 {
+		q += `&`
+	}
+	url := p.context.Request().URL().Path() + `?` + q + pq
+	return url
+}
+
 func (p *Pagination) List(num ...int) []int {
 	if len(num) > 0 {
 		p.num = num[0]
