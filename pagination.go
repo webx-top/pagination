@@ -165,8 +165,15 @@ func (p *Pagination) URL(page int) string {
 	return s
 }
 
-func (p *Pagination) SetURL(s string) *Pagination {
-	p.urlLayout = s
+func (p *Pagination) SetURL(s interface{}, delKeys ...string) *Pagination {
+	switch v := s.(type) {
+	case string:
+		p.urlLayout = v
+	case map[string]string:
+		p.urlLayout = p.RebuildURL(v, delKeys...)
+	default:
+		panic(`Unsupported type: ` + fmt.Sprintf(`%T`, s))
+	}
 	return p
 }
 
