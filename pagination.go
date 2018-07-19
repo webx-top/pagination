@@ -198,6 +198,7 @@ func (p *Pagination) URL(curr interface{}) (s string) {
 	if p.mode == ModePageNumber {
 		s = strings.Replace(p.urlLayout, `{page}`, fmt.Sprint(curr), -1)
 		s = strings.Replace(s, `{rows}`, strconv.Itoa(p.rows), -1)
+		s = strings.Replace(s, `{size}`, strconv.Itoa(p.limit), -1)
 		s = strings.Replace(s, `{limit}`, strconv.Itoa(p.limit), -1)
 		s = strings.Replace(s, `{pages}`, strconv.Itoa(p.pages), -1)
 	} else {
