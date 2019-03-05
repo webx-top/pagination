@@ -259,13 +259,12 @@ func (p *Pagination) List(num ...int) []int {
 		count int
 	)
 	remainPages := pages - p.num
-	if remainPages >= 0 {
-		start = remainPages + 1
-	} else {
-		start = p.Page() - (p.num / 2)
-	}
+	half := p.num / 2
+	start = p.Page() - half
 	if start < 1 {
 		start = 1
+	} else if start+p.num > remainPages {
+		start = remainPages
 	}
 	for page := start; page <= pages; page++ {
 		count++
