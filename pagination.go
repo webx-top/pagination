@@ -260,7 +260,7 @@ func (p *Pagination) List(num ...int) []int {
 	)
 	remainPages := pages - p.num
 	if remainPages >= 0 {
-		start = remainPages
+		start = remainPages + 1
 	} else {
 		start = p.Page() - (p.num / 2)
 	}
