@@ -326,6 +326,24 @@ func (p *Pagination) MarshalJSON() ([]byte, error) {
 	return engine.Str2bytes(s), nil
 }
 
+func (p *Pagination) SetOptions(m echo.H) *Pagination {
+	if _, y := m[`page`]; y {
+		p.mode = ModePageNumber
+		p.page = m.Int(`page`)
+		p.rows = m.Int(`rows`)
+		p.limit = m.Int(`limit`)
+		p.pages = m.Int(`pages`)
+	} else {
+		p.mode = ModePosition
+		p.position = m.String(`curr`)
+		p.prevPosition = m.String(`prev`)
+		p.nextPosition = m.String(`next`)
+	}
+	p.urlLayout = m.String(`urlLayout`)
+	p.data = m.Store(`data`)
+	return p
+}
+
 // MarshalXML allows type Pagination to be used with xml.Marshal
 func (p *Pagination) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	start.Name.Local = `Pagination`
