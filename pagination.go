@@ -344,6 +344,23 @@ func (p *Pagination) SetOptions(m echo.H) *Pagination {
 	return p
 }
 
+func (p *Pagination) Options() echo.H {
+	m := echo.H{}
+	if p.mode == ModePageNumber {
+		m.Set(`page`, p.page)
+		m.Set(`rows`, p.rows)
+		m.Set(`limit`, p.limit)
+		m.Set(`pages`, p.pages)
+	} else {
+		m.Set(`curr`, p.position)
+		m.Set(`prev`, p.prevPosition)
+		m.Set(`next`, p.nextPosition)
+	}
+	m.Set(`urlLayout`, p.urlLayout)
+	m.Set(`data`, p.data)
+	return m
+}
+
 // MarshalXML allows type Pagination to be used with xml.Marshal
 func (p *Pagination) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	start.Name.Local = `Pagination`
