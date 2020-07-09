@@ -137,7 +137,7 @@ func (p *Pagination) HasPrev() bool {
 	if p.mode == ModePageNumber {
 		return p.Page() > 1
 	}
-	return len(p.PrevPosition()) > 0 && p.PrevPosition() != `0` && p.PrevPosition() != p.Position()
+	return p.PrevPosition() != `0` && p.PrevPosition() != p.Position()
 
 }
 
