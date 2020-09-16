@@ -53,10 +53,12 @@ var (
 	}
 )
 
+// New 创建分页实例
 func New(ctx echo.Context) *Pagination {
 	return &Pagination{context: ctx, pages: -1, data: echo.H{}, mode: ModePageNumber}
 }
 
+// Pagination 分页
 type Pagination struct {
 	context   echo.Context
 	tmpl      string
