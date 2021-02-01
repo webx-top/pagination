@@ -258,6 +258,13 @@ func (p *Pagination) Pages() int {
 	return p.pages
 }
 
+func (p *Pagination) Offset() int {
+	if p.page < 1 {
+		return 0
+	}
+	return (p.page - 1) * p.size
+}
+
 func (p *Pagination) URL(curr interface{}) (s string) {
 	if p.mode == ModePageNumber {
 		size := strconv.Itoa(p.size)
