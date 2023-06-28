@@ -3,6 +3,7 @@ package pagination
 import (
 	"encoding/json"
 	"encoding/xml"
+	"net/url"
 	"testing"
 
 	"github.com/webx-top/echo/testing/test"
@@ -60,4 +61,16 @@ func TestUnmarshalXML(t *testing.T) {
 	test.Eq(t, p.size, p2.size)
 	//test.Eq(t, p.num, p2.num)
 	test.Eq(t, p.pages, p2.pages)
+}
+
+func TestBuildQueryString(t *testing.T) {
+	p := New(nil)
+	r := p.BuildQueryString(url.Values{
+		`rows`:  []string{`200`},
+		`page`:  []string{`2`},
+		`size`:  []string{`10`},
+		`type`:  []string{`user`},
+		`_pjax`: []string{`#container`},
+	}, `_pjax`)
+	test.Eq(t, `type=user&page={page}&size={size}&rows={rows}`, r)
 }
