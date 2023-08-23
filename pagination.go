@@ -291,9 +291,6 @@ func (p *Pagination) URL(curr interface{}) (s string) {
 			nextP = p.nextPosition
 		} else {
 			nextP = fmt.Sprint(curr)
-			if len(nextP) == 0 {
-				nextP = p.nextPosition
-			}
 		}
 		s = strings.Replace(p.urlLayout, `{curr}`, p.position, -1)
 		s = strings.Replace(s, `{prev}`, p.prevPosition, -1)
