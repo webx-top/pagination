@@ -73,4 +73,8 @@ func TestBuildQueryString(t *testing.T) {
 		`_pjax`: []string{`#container`},
 	}, `_pjax`)
 	test.Eq(t, `type=user&page={page}&size={size}&rows={rows}`, r)
+
+	p.SetURL(`type=user&page={page}&size={size}&rows={rows}`)
+	s := p.URL(10)
+	test.Eq(t, `type=user&page=10&size=0&rows=0`, s)
 }
