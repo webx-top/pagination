@@ -194,6 +194,22 @@ func (p *Pagination) HasPrev() bool {
 	return len(p.PrevPosition()) > 0 && p.PrevPosition() != `0` && p.PrevPosition() != p.Position()
 }
 
+// IsFirst 是否第一页
+func (p *Pagination) IsFirst() bool {
+	if p.mode == ModePageNumber {
+		return p.Page() <= 1
+	}
+	return len(p.PrevPosition()) == 0 || p.PrevPosition() == `0`
+}
+
+// IsLast 是否最后一页
+func (p *Pagination) IsLast() bool {
+	if p.mode == ModePageNumber {
+		return p.Page() >= p.Pages()
+	}
+	return len(p.NextPosition()) == 0 || p.NextPosition() == `0`
+}
+
 func (p *Pagination) SetPage(page int) *Pagination {
 	p.page = page
 	return p
