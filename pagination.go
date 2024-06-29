@@ -199,7 +199,7 @@ func (p *Pagination) IsFirst() bool {
 	if p.mode == ModePageNumber {
 		return p.Page() <= 1
 	}
-	return len(p.PrevPosition()) == 0 || p.PrevPosition() == `0`
+	return len(p.Position()) == 0 || p.Position() == `0`
 }
 
 // IsLast 是否最后一页
